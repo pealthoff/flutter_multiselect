@@ -26,6 +26,7 @@ class SelectionModal extends StatefulWidget {
 class _SelectionModalState extends State<SelectionModal> {
   Icon icon = new Icon(
     Icons.search,
+    //TODO: cor do tema
     color: Colors.white,
   );
   final globalKey = new GlobalKey<ScaffoldState>();
@@ -94,6 +95,7 @@ class _SelectionModalState extends State<SelectionModal> {
           ),
           _currentlySelectedOptions(),
           Container(
+            //TODO: cor do tema
             color: Colors.grey.shade600,
             child: ButtonBar(
                 alignment: MainAxisAlignment.spaceBetween,
@@ -107,7 +109,9 @@ class _SelectionModalState extends State<SelectionModal> {
                         Icons.clear,
                         size: 20.0,
                       ),
-                      color: Colors.grey.shade100,
+                      //TODO: cor do tema
+                      color: Colors.red,
+                      // color: Colors.grey.shade100,
                       onPressed: () {
                         Navigator.pop(context, null);
                       },
@@ -121,7 +125,9 @@ class _SelectionModalState extends State<SelectionModal> {
                         Icons.save,
                         size: 20.0,
                       ),
-                      color: Theme.of(context).primaryColor,
+                      //TODO: cor do tema
+                      color: Colors.green,
+                      // color: Theme.of(context).primaryColor,
                       textColor: Colors.white,
                       onPressed: _localDataSourceWithState.where((item) => item['checked']).length > widget.maxLength ? null :  
                       (){
@@ -161,8 +167,9 @@ class _SelectionModalState extends State<SelectionModal> {
               maxWidth: MediaQuery.of(context).size.width - 80.0),
           child: Text(existingItem['text'], overflow: TextOverflow.ellipsis),
         ),
-        deleteButtonTooltipMessage: 'Tap to delete this item',
+        deleteButtonTooltipMessage: 'Clique para deletar este item',
         deleteIcon: Icon(Icons.cancel),
+        //TODO: cor do tema
         deleteIconColor: Colors.grey,
         onDeleted: () {
           existingItem['checked'] = false;
@@ -173,15 +180,16 @@ class _SelectionModalState extends State<SelectionModal> {
     return selectedOptions.length > 0
         ? Container(
             padding: EdgeInsets.all(10.0),
-            color: Colors.grey.shade400,
+            color: Theme.of(context).cardColor,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 new Text(
-                  'Currently selected ${selectedOptions.length} items (tap to remove)', // use languageService here
+                  '${selectedOptions.length} items selecionados (clique no x para remover)', // use languageService here
                   style: TextStyle(
-                      color: Colors.black87, fontWeight: FontWeight.bold),
+                      color: Theme.of(context).textTheme.bodyText1.color,
+                      fontWeight: FontWeight.bold),
                 ),
                 ConstrainedBox(
                     constraints: new BoxConstraints(
@@ -212,7 +220,8 @@ class _SelectionModalState extends State<SelectionModal> {
                 item['checked']
                     ? Icons.check_box
                     : Icons.check_box_outline_blank,
-                color: Theme.of(context).primaryColor),
+                //TODO: fazer com o tema
+                color: Colors.orange),
             scale: 1.5,
           ),
           onTap: () {
@@ -233,6 +242,7 @@ class _SelectionModalState extends State<SelectionModal> {
         children: <Widget>[
           Container(
             child: TextField(
+              style: new TextStyle(color: Colors.black),
               controller: _controller,
               keyboardAppearance: Brightness.light,
               onChanged: searchOperation,

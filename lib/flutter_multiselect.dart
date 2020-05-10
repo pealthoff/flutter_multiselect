@@ -25,9 +25,9 @@ class MultiSelect extends FormField<dynamic> {
       dynamic initialValue,
       bool autovalidate = false,
       this.titleText = 'Title',
-      this.hintText = 'Tap to select one or more...',
+      this.hintText = 'Clique para selecionar os produtos...',
       this.required = false,
-      this.errorText = 'Please select one or more option(s)',
+      this.errorText = 'Por favor, selecione um ou mais produtos',
       this.value,
       this.leading,
       this.filterable = true,
@@ -95,7 +95,8 @@ class MultiSelect extends FormField<dynamic> {
                   child: InputDecorator(
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: Colors.white,
+                      //TODO: usar o tema
+                      fillColor: Colors.black12,
                       contentPadding:
                           EdgeInsets.only(left: 10.0, top: 0.0, right: 10.0),
                       errorBorder: OutlineInputBorder(
@@ -121,7 +122,7 @@ class MultiSelect extends FormField<dynamic> {
                                   text: TextSpan(
                                       text: titleText,
                                       style: TextStyle(
-                                          fontSize: 16.0, color: Theme.of(state.context).primaryColor),
+                                          fontSize: 16.0, color: Theme.of(state.context).textTheme.bodyText1.color),
                                       children: 
                                           [
                                               TextSpan(
@@ -140,18 +141,18 @@ class MultiSelect extends FormField<dynamic> {
                                           ),
                                 ),
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.arrow_downward,
-                                    color: Theme.of(state.context).primaryColor,
-                                    size: 30.0,
-                                  )
-                                ],
-                              )
+                              // Column(
+                              //   crossAxisAlignment: CrossAxisAlignment.center,
+                              //   mainAxisAlignment: MainAxisAlignment.center,
+                              //   mainAxisSize: MainAxisSize.max,
+                              //   children: <Widget>[
+                              //     Icon(
+                              //       Icons.arrow_downward,
+                              //       color: Theme.of(state.context).primaryColor,
+                              //       size: 30.0,
+                              //     )
+                              //   ],
+                              // )
                             ],
                           ),
                         ),
