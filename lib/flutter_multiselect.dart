@@ -13,6 +13,7 @@ class MultiSelect extends FormField<dynamic> {
   final List dataSource;
   final String textField;
   final String valueField;
+  final String unidadeField;
   final Function change;
   final Function open;
   final Function close;
@@ -34,6 +35,7 @@ class MultiSelect extends FormField<dynamic> {
       this.dataSource,
       this.textField,
       this.valueField,
+      this.unidadeField,
       this.change,
       this.open,
       this.close,
@@ -67,6 +69,12 @@ class MultiSelect extends FormField<dynamic> {
 
               return InkWell(
                   onTap: () async {
+                    print("sei tudo de voce e voce nada sabe sobre mim");
+                    print(state.value);
+                    var produtosSelecionados = state.value ?? {
+                      "values": [],
+                      "quantidades": new Map<int, TextEditingController>(),
+                    };
                     var results = await Navigator.push(
                         state.context,
                         MaterialPageRoute<dynamic>(
@@ -75,8 +83,10 @@ class MultiSelect extends FormField<dynamic> {
                               filterable: filterable,
                               valueField: valueField,
                               textField: textField,
+                              unidadeField: unidadeField,
                               dataSource: dataSource,
-                              values: state.value ?? [],
+                              values: produtosSelecionados["values"],
+                              quantidades: produtosSelecionados["quantidades"],
                               maxLength: maxLength ?? dataSource?.length),
                           fullscreenDialog: true,
                         ));
@@ -171,7 +181,7 @@ class MultiSelect extends FormField<dynamic> {
                                 spacing: 8.0, // gap between adjacent chips
                                 runSpacing: 1.0, // gap between lines
                                 children:
-                                    _buildSelectedOptions(state.value, state),
+                                    _buildSelectedOptions(state.value["values"], state),
                               )
                             
                       ],

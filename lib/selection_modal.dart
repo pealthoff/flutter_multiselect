@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class SelectionModal extends StatefulWidget {
   @override
@@ -6,19 +7,23 @@ class SelectionModal extends StatefulWidget {
 
   final List dataSource;
   final List values;
+  final Map<int, TextEditingController> quantidades;
   final bool filterable;
   final String textField;
   final String valueField;
+  final String unidadeField;
   final String title;
   final int maxLength;
-  
+
   SelectionModal(
       {this.filterable,
       this.dataSource,
       this.title = 'Please select one or more option(s)',
       this.values,
+      this.quantidades,
       this.textField,
       this.valueField,
+      this.unidadeField,
       this.maxLength})
       : super();
 }
@@ -36,6 +41,9 @@ class _SelectionModalState extends State<SelectionModal> {
   List _localDataSourceWithState = [];
   List _searchresult = [];
 
+  Map<int, TextEditingController> quantidades;
+  
+
   _SelectionModalState() {
     _controller.addListener(() {
       if (_controller.text.isEmpty) {
@@ -50,21 +58,27 @@ class _SelectionModalState extends State<SelectionModal> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    widget.dataSource.forEach((item) {
-      var newItem = {
-        'value': item[widget.valueField],
-        'text': item[widget.textField],
-        'checked': widget.values.contains(item[widget.valueField])
-      };
-      _localDataSourceWithState.add(newItem);
-    });
+    @override
+    void initState() {
+        quantidades = widget.quantidades;
+        super.initState();
+        widget.dataSource.forEach((item) {
+            var newItem = {
+                'value': item[widget.valueField],
+                'text': item[widget.textField],
+                'unidade_medida': item[widget.unidadeField],
+                'checked': widget.values.contains(item[widget.valueField])
+            };
 
-    _searchresult = List.from(_localDataSourceWithState);
-    _isSearching = false;
-  }
+            if(quantidades.isEmpty) {
+                quantidades[item[widget.valueField]] = new TextEditingController();
+            }
+            _localDataSourceWithState.add(newItem);
+        });
+
+        _searchresult = List.from(_localDataSourceWithState);
+        _isSearching = false;
+    }
 
   Widget _buildAppBar(BuildContext context) {
     return AppBar(
@@ -138,7 +152,7 @@ class _SelectionModalState extends State<SelectionModal> {
                           selectedValuesObjectList.forEach((item) {
                             selectedValues.add(item['value']);
                           });
-                          Navigator.pop(context, selectedValues);
+                          Navigator.pop(context, { "values": selectedValues, "quantidades": quantidades});
                       },
                     ),
                   )
@@ -210,28 +224,61 @@ class _SelectionModalState extends State<SelectionModal> {
         : new Container();
   }
 
-  ListView _optionsList() {
-    List<Widget> options = [];
-    _searchresult.forEach((item) {
-      options.add(ListTile(
-          title: Text(item['text'] ?? ''),
-          leading: Transform.scale(
-            child: Icon(
-                item['checked']
-                    ? Icons.check_box
-                    : Icons.check_box_outline_blank,
-                //TODO: fazer com o tema
-                color: Colors.orange),
-            scale: 1.5,
-          ),
-          onTap: () {
-            item['checked'] = !item['checked'];
-            setState(() {});
-          }));
-      options.add(new Divider(height: 1.0));
-    });
-    return ListView(children: options);
-  }
+    ListView _optionsList() {
+        List<Widget> options = [];
+        _searchresult.forEach((item) {
+        options.add(ListTile(
+            title: Text(item['text'] ?? ''),
+            leading: Transform.scale(
+                child:
+                    Icon(
+                        item['checked']
+                            ? Icons.check_box
+                            : Icons.check_box_outline_blank,
+                        //TODO: fazer com o tema
+                        color: Colors.orange),
+                    scale: 1.5,
+            ),
+            onTap: () {
+                item['checked'] = !item['checked'];
+                setState(() {});
+            },
+            trailing: new Container(
+                width: 150,
+                child: new Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                        new Expanded(
+                            flex: 3,
+                            child: TextFormField(
+                                controller: quantidades[item['value']],
+                                keyboardType: TextInputType.numberWithOptions(decimal: false, signed: false),
+                                validator: (value) {
+                                    if (value.isEmpty) { return 'Quantidade não pode ser vazio'; }
+                                    return null;
+                                },
+                                decoration: InputDecoration(
+                                    hintText: "1",
+                                    hintStyle: TextStyle(color: Colors.grey[400])
+                                ),
+                            ),
+                        ),
+                        new Expanded(
+                            flex: 3,
+                            child: new TextField(
+                                textAlign: TextAlign.end,
+                                decoration:
+                                    new InputDecoration.collapsed(hintText: item["unidade_medida"]),
+                            ),
+                        ),
+                    ],
+                ),
+            )
+        ));
+        options.add(new Divider(height: 1.0));
+        });
+        return ListView(children: options);
+    }
 
   Widget _buildSearchText() {
     return Container(
