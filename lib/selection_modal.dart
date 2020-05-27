@@ -70,7 +70,7 @@ class _SelectionModalState extends State<SelectionModal> {
                 'checked': widget.values.contains(item[widget.valueField])
             };
 
-            if(quantidades.isEmpty) {
+            if(!quantidades.containsKey(item[widget.valueField])) {
                 quantidades[item[widget.valueField]] = new TextEditingController();
             }
             _localDataSourceWithState.add(newItem);
